@@ -6,22 +6,29 @@
                https://jakarta.ee/xml/ns/persistence
                https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
-    <persistence-unit name="salesPU" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="libraryPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>com.example.salesmis.model.entity.Customer</class>
-        <class>com.example.salesmis.model.entity.Product</class>
-        <class>com.example.salesmis.model.entity.SalesOrder</class>
-        <class>com.example.salesmis.model.entity.OrderDetail</class>
+        <class>com.laptrinhwindows.library_management.model.entity.Role</class>
+        <class>com.laptrinhwindows.library_management.model.entity.User</class>
+        <class>com.laptrinhwindows.library_management.model.entity.Student</class>
+        <class>com.laptrinhwindows.library_management.model.entity.Supplier</class>
+        <class>com.laptrinhwindows.library_management.model.entity.BookTitle</class>
+        <class>com.laptrinhwindows.library_management.model.entity.Book</class>
+        <class>com.laptrinhwindows.library_management.model.entity.BorrowOrder</class>
+        <class>com.laptrinhwindows.library_management.model.entity.BorrowDetail</class>
+        <class>com.laptrinhwindows.library_management.model.entity.ReturnRecord</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:mysql://localhost:3306/library_management?useSSL=false&amp;serverTimezone=Asia/Ho_Chi_Minh&amp;allowPublicKeyRetrieval=true"/>
             <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="12345"/>
-
-            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="jakarta.persistence.jdbc.password" value="090104"/>
+            <property name="hibernate.connection.provider_class" value="hikaricp"/>
+            <property name="hibernate.hikari.minimumIdle" value="1"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="5"/>
+            <property name="hibernate.hikari.poolName" value="LibraryHikariPool"/>
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>

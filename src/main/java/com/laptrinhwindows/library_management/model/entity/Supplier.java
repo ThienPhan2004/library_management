@@ -1,5 +1,8 @@
 package com.laptrinhwindows.library_management.model.entity;
 
+import com.laptrinhwindows.library_management.model.enumtype.RecordStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +25,9 @@ public class Supplier {
     private String phone;
     private String address;
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private RecordStatus status = RecordStatus.ACTIVE;
 
     @OneToMany(mappedBy = "supplier")
     private List<BookTitle> bookTitles = new ArrayList<>();
@@ -72,5 +78,13 @@ public class Supplier {
 
     public void setBookTitles(List<BookTitle> bookTitles) {
         this.bookTitles = bookTitles;
+    }
+
+    public RecordStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RecordStatus status) {
+        this.status = status;
     }
 }

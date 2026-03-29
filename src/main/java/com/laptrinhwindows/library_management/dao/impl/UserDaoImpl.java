@@ -12,7 +12,7 @@ public class UserDaoImpl extends GenericDaoImpl<User> implements UserDao {
         super(User.class);
     }
 
-    // Tim user theo ten dang nhap va mat khau de phuc vu man hinh login.
+    // Tìm người dùng theo tên đăng nhập và mật khẩu để phục vụ màn hình đăng nhập.
     @Override
     public User findByUsernameAndPassword(String username, String password) {
         EntityManager em = createEntityManager();

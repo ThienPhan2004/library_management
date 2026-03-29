@@ -3,8 +3,9 @@ package com.laptrinhwindows.library_management.controller;
 import com.laptrinhwindows.library_management.dto.LoginUserDTO;
 import com.laptrinhwindows.library_management.service.AuthService;
 import com.laptrinhwindows.library_management.service.impl.AuthServiceImpl;
+import com.laptrinhwindows.library_management.view.AdminFrame;
 import com.laptrinhwindows.library_management.view.LoginFrame;
-import com.laptrinhwindows.library_management.view.MainFrame;
+import com.laptrinhwindows.library_management.view.ManagerFrame;
 
 public class LoginController {
     private final LoginFrame loginFrame;
@@ -20,7 +21,7 @@ public class LoginController {
         loginFrame.addLoginListener(event -> handleLogin());
     }
 
-    // Xử lý nghiệp vụ đăng nhập và mở màn hình chính nếu thành công.
+    // Xử lý nghiệp vụ đăng nhập và mở màn hình phù hợp với vai trò.
     private void handleLogin() {
         String username = loginFrame.getUsername();
         String password = loginFrame.getPassword();
@@ -37,11 +38,30 @@ public class LoginController {
             return;
         }
 
-        MainFrame mainFrame = new MainFrame();
-        MainController mainController = new MainController(mainFrame, loginUser);
-        mainController.init();
+        openRoleScreen(loginUser);
+    }
 
+    // Phân tách giao diện theo từng đối tượng sử dụng hệ thống.
+    private void openRoleScreen(LoginUserDTO loginUser) {
         loginFrame.dispose();
-        mainFrame.setVisible(true);
+
+        if (loginUser.getRoleId() != null && loginUser.getRoleId() == 1) {
+            AdminFrame adminFrame = new AdminFrame();
+            AdminController adminController = new AdminController(adminFrame, loginUser);
+            adminController.init();
+            adminFrame.setVisible(true);
+            return;
+        }
+
+        if (loginUser.getRoleId() != null && loginUser.getRoleId() == 2) {
+            ManagerFrame managerFrame = new ManagerFrame();
+            ManagerController managerController = new ManagerController(managerFrame, loginUser);
+            managerController.init();
+            managerFrame.setVisible(true);
+            return;
+        }
+
+        loginFrame.setVisible(true);
+        loginFrame.setMessage("Tài khoản chưa được gán vai trò hợp lệ.");
     }
 }

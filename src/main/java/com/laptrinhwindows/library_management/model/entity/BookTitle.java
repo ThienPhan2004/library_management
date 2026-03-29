@@ -1,7 +1,10 @@
 package com.laptrinhwindows.library_management.model.entity;
 
+import com.laptrinhwindows.library_management.model.enumtype.RecordStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +30,9 @@ public class BookTitle {
 
     @Column(name = "publish_year")
     private Integer publishYear;
+
+    @Enumerated(EnumType.STRING)
+    private RecordStatus status = RecordStatus.ACTIVE;
 
     @ManyToOne
     @JoinColumn(name = "supplier_id")
@@ -81,6 +87,14 @@ public class BookTitle {
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public RecordStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RecordStatus status) {
+        this.status = status;
     }
 
     public List<Book> getBooks() {

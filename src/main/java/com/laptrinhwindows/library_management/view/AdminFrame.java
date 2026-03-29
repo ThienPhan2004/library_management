@@ -4,25 +4,25 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class MainFrame extends JFrame {
+public class AdminFrame extends JFrame {
     private final JLabel titleLabel;
     private final JLabel userInfoLabel;
     private final JLabel statusLabel;
 
-    public MainFrame() {
-        setTitle("Quản lý thư viện");
+    public AdminFrame() {
+        setTitle("Quản lý thư viện - Admin");
         setSize(950, 650);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        titleLabel = new JLabel("HỆ THỐNG QUẢN LÝ THƯ VIỆN", SwingConstants.CENTER);
+        titleLabel = new JLabel("GIAO DIỆN QUẢN TRỊ VIÊN", SwingConstants.CENTER);
         userInfoLabel = new JLabel("Chưa đăng nhập", SwingConstants.CENTER);
         statusLabel = new JLabel("Khởi tạo giao diện...", SwingConstants.CENTER);
 
         initLayout();
     }
 
-    // Tạo khung giao diện tổng quan cho hệ thống.
+    // Tạo khung giao diện dành riêng cho quản trị viên.
     private void initLayout() {
         Font titleFont = new Font("Segoe UI", Font.BOLD, 26);
         Font userFont = new Font("Segoe UI", Font.PLAIN, 15);
@@ -35,13 +35,8 @@ public class MainFrame extends JFrame {
         mainPanel.setBackground(Color.WHITE);
 
         titleLabel.setFont(titleFont);
-        titleLabel.setForeground(new Color(33, 37, 41));
-
         userInfoLabel.setFont(userFont);
-        userInfoLabel.setForeground(new Color(80, 80, 80));
-
         statusLabel.setFont(statusFont);
-        statusLabel.setForeground(new Color(0, 102, 204));
 
         JPanel topPanel = new JPanel(new BorderLayout(5, 5));
         topPanel.setBackground(Color.WHITE);
@@ -50,9 +45,10 @@ public class MainFrame extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFont(tabFont);
-        tabbedPane.addTab("Sách", createPlaceholderPanel("Màn hình quản lý sách", contentFont));
-        tabbedPane.addTab("Sinh viên", createPlaceholderPanel("Màn hình quản lý sinh viên", contentFont));
-        tabbedPane.addTab("Phiếu mượn", createPlaceholderPanel("Màn hình quản lý phiếu mượn", contentFont));
+        tabbedPane.addTab("Quản lý tài khoản", createPlaceholderPanel("Màn hình quản lý tài khoản", contentFont));
+        tabbedPane.addTab("Quản lý sách", createPlaceholderPanel("Màn hình quản lý sách", contentFont));
+        tabbedPane.addTab("Quản lý sinh viên", createPlaceholderPanel("Màn hình quản lý sinh viên", contentFont));
+        tabbedPane.addTab("Báo cáo", createPlaceholderPanel("Màn hình báo cáo thống kê", contentFont));
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
@@ -68,9 +64,8 @@ public class MainFrame extends JFrame {
 
         JLabel label = new JLabel(text);
         label.setFont(contentFont);
-        label.setForeground(new Color(60, 60, 60));
-
         panel.add(label);
+
         return panel;
     }
 

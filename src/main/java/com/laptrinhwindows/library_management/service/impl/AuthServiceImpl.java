@@ -14,7 +14,7 @@ public class AuthServiceImpl implements AuthService {
         this.userDao = new UserDaoImpl();
     }
 
-    // Kiem tra thong tin dang nhap va tra ve nguoi dung neu hop le.
+    // Kiểm tra thông tin đăng nhập và trả về người dùng nếu hợp lệ.
     @Override
     public LoginUserDTO login(String username, String password) {
         User user = userDao.findByUsernameAndPassword(username, password);
@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         return loginUser;
     }
 
-    // Doi ten vai tro sang cach hien thi don gian theo yeu cau de bai.
+    // Đổi tên vai trò sang cách hiển thị đơn giản theo yêu cầu đề bài.
     private String resolveRoleName(Role role) {
         if (role.getId() == null) {
             return role.getName();

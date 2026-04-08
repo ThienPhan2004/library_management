@@ -1,5 +1,6 @@
-package com.laptrinhwindows.library_management.controller.manager;
+package com.laptrinhwindows.library_management.controller.staff;
 
+import com.laptrinhwindows.library_management.controller.common.LibraryContext;
 import com.laptrinhwindows.library_management.dao.UserLookupDao;
 import com.laptrinhwindows.library_management.model.entity.Book;
 import com.laptrinhwindows.library_management.model.entity.BorrowOrder;
@@ -10,21 +11,24 @@ import com.laptrinhwindows.library_management.model.enumtype.RecordStatus;
 import com.laptrinhwindows.library_management.service.BookService;
 import com.laptrinhwindows.library_management.service.BorrowOrderService;
 import com.laptrinhwindows.library_management.service.StudentService;
-import com.laptrinhwindows.library_management.view.manager.BorrowOrderPanel;
+import com.laptrinhwindows.library_management.util.BorrowReceiptPdfExporter;
+import com.laptrinhwindows.library_management.view.staff.BorrowOrderPanel;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BorrowOrderPanelController {
-    private final ManagerContext context;
+    private final LibraryContext context;
     private final StudentService studentService;
     private final BookService bookService;
     private final BorrowOrderService borrowOrderService;
     private final UserLookupDao userLookupDao;
     private final BorrowOrderPanel panel;
+    private BorrowOrder latestBorrowOrder;
 
-    public BorrowOrderPanelController(ManagerContext context) {
+    public BorrowOrderPanelController(LibraryContext context) {
         this.context = context;
         this.studentService = context.getStudentService();
         this.bookService = context.getBookService();
@@ -37,6 +41,8 @@ public class BorrowOrderPanelController {
         panel.addStudentSearchListener(event -> handleStudentSearch());
         panel.addStudentResetListener(event -> handleStudentReset());
         panel.addCreateBorrowOrderListener(event -> handleCreateBorrowOrder());
+        panel.addExportPdfListener(event -> handleExportPdf());
+        panel.setExportPdfEnabled(false);
     }
 
     public void loadOptions() {
@@ -96,14 +102,55 @@ public class BorrowOrderPanelController {
 
             BorrowOrder borrowOrder = borrowOrderService.createBorrowOrder(user, student, books, borrowDate, dueDate);
             if (borrowOrder != null) {
+                latestBorrowOrder = borrowOrderService.findBorrowOrderById(borrowOrder.getId());
+                panel.setExportPdfEnabled(latestBorrowOrder != null);
                 panel.clearBorrowOrderForm();
                 context.refreshCirculationViews();
-                context.setStatusMessage("Lưu phiếu mượn thành công.");
+                context.setStatusMessage("Lưu phiếu mượn thành công. Bạn có thể xuất phiếu PDF cho sinh viên.");
             }
         } catch (IllegalArgumentException ex) {
             panel.showErrorMessage(ex.getMessage());
         } catch (Exception ex) {
             panel.showErrorMessage("Không thể lưu phiếu mượn. Vui lòng kiểm tra dữ liệu.");
         }
+    }
+
+    private void handleExportPdf() {
+        if (latestBorrowOrder == null) {
+            panel.showErrorMessage("Chưa có phiếu mượn nào để xuất PDF.");
+            return;
+        }
+
+        try {
+            String studentCode = latestBorrowOrder.getStudent() == null ? "sinh-vien" : latestBorrowOrder.getStudent().getStudentCode();
+            File outputFile = panel.choosePdfSaveLocation("phieu-muon-" + studentCode + "-" + latestBorrowOrder.getId() + ".pdf");
+            if (outputFile == null) {
+                return;
+            }
+
+            BorrowReceiptPdfExporter.export(latestBorrowOrder, outputFile);
+            context.setStatusMessage("Xuất phiếu PDF thành công: " + outputFile.getName());
+
+            if (panel.confirmOpenPdf(outputFile)) {
+                BorrowReceiptPdfExporter.openFile(outputFile);
+            }
+        } catch (IllegalArgumentException ex) {
+            panel.showErrorMessage(ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            panel.showErrorMessage(resolveErrorMessage(ex));
+        }
+    }
+
+    private String resolveErrorMessage(Exception ex) {
+        Throwable current = ex;
+        while (current.getCause() != null) {
+            current = current.getCause();
+        }
+        String message = current.getMessage();
+        if (message == null || message.isBlank()) {
+            return "Không thể xuất phiếu mượn PDF.";
+        }
+        return "Không thể xuất phiếu mượn PDF: " + message;
     }
 }

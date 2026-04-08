@@ -1,4 +1,4 @@
-package com.laptrinhwindows.library_management.controller.manager;
+package com.laptrinhwindows.library_management.controller.common;
 
 import com.laptrinhwindows.library_management.dao.UserLookupDao;
 import com.laptrinhwindows.library_management.dto.LoginUserDTO;
@@ -7,18 +7,18 @@ import com.laptrinhwindows.library_management.service.BookTitleService;
 import com.laptrinhwindows.library_management.service.BorrowOrderService;
 import com.laptrinhwindows.library_management.service.StudentService;
 import com.laptrinhwindows.library_management.service.SupplierService;
-import com.laptrinhwindows.library_management.view.ManagerFrame;
+import com.laptrinhwindows.library_management.view.LibraryWorkspaceFrame;
 import com.laptrinhwindows.library_management.view.manager.BookManagementPanel;
 import com.laptrinhwindows.library_management.view.manager.BookTitleManagementPanel;
-import com.laptrinhwindows.library_management.view.manager.BorrowOrderPanel;
-import com.laptrinhwindows.library_management.view.manager.BorrowTrackingPanel;
 import com.laptrinhwindows.library_management.view.manager.ReportPanel;
-import com.laptrinhwindows.library_management.view.manager.ReturnBookPanel;
-import com.laptrinhwindows.library_management.view.manager.StudentManagementPanel;
 import com.laptrinhwindows.library_management.view.manager.SupplierManagementPanel;
+import com.laptrinhwindows.library_management.view.shared.StudentManagementPanel;
+import com.laptrinhwindows.library_management.view.staff.BorrowOrderPanel;
+import com.laptrinhwindows.library_management.view.staff.BorrowTrackingPanel;
+import com.laptrinhwindows.library_management.view.staff.ReturnBookPanel;
 
-public class ManagerContext {
-    private final ManagerFrame managerFrame;
+public class LibraryContext {
+    private final LibraryWorkspaceFrame workspaceFrame;
     private final LoginUserDTO loginUser;
     private final BookService bookService;
     private final BookTitleService bookTitleService;
@@ -32,8 +32,8 @@ public class ManagerContext {
     private final Runnable refreshTrackingOrders;
     private final Runnable refreshDefaultReport;
 
-    public ManagerContext(
-            ManagerFrame managerFrame,
+    public LibraryContext(
+            LibraryWorkspaceFrame workspaceFrame,
             LoginUserDTO loginUser,
             BookService bookService,
             BookTitleService bookTitleService,
@@ -47,7 +47,7 @@ public class ManagerContext {
             Runnable refreshTrackingOrders,
             Runnable refreshDefaultReport
     ) {
-        this.managerFrame = managerFrame;
+        this.workspaceFrame = workspaceFrame;
         this.loginUser = loginUser;
         this.bookService = bookService;
         this.bookTitleService = bookTitleService;
@@ -91,39 +91,39 @@ public class ManagerContext {
     }
 
     public StudentManagementPanel getStudentManagementPanel() {
-        return managerFrame.getStudentManagementPanel();
+        return workspaceFrame.getStudentManagementPanel();
     }
 
     public BookTitleManagementPanel getBookTitleManagementPanel() {
-        return managerFrame.getBookTitleManagementPanel();
+        return workspaceFrame.getBookTitleManagementPanel();
     }
 
     public BookManagementPanel getBookManagementPanel() {
-        return managerFrame.getBookManagementPanel();
+        return workspaceFrame.getBookManagementPanel();
     }
 
     public BorrowOrderPanel getBorrowOrderPanel() {
-        return managerFrame.getBorrowOrderPanel();
+        return workspaceFrame.getBorrowOrderPanel();
     }
 
     public ReturnBookPanel getReturnBookPanel() {
-        return managerFrame.getReturnBookPanel();
+        return workspaceFrame.getReturnBookPanel();
     }
 
     public BorrowTrackingPanel getBorrowTrackingPanel() {
-        return managerFrame.getBorrowTrackingPanel();
+        return workspaceFrame.getBorrowTrackingPanel();
     }
 
     public SupplierManagementPanel getSupplierManagementPanel() {
-        return managerFrame.getSupplierManagementPanel();
+        return workspaceFrame.getSupplierManagementPanel();
     }
 
     public ReportPanel getReportPanel() {
-        return managerFrame.getReportPanel();
+        return workspaceFrame.getReportPanel();
     }
 
     public void setStatusMessage(String message) {
-        managerFrame.setStatusMessage(message);
+        workspaceFrame.setStatusMessage(message);
     }
 
     public void refreshBookTable() {

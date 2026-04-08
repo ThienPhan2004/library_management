@@ -1,5 +1,6 @@
 package com.laptrinhwindows.library_management.controller.manager;
 
+import com.laptrinhwindows.library_management.controller.common.LibraryContext;
 import com.laptrinhwindows.library_management.model.entity.Book;
 import com.laptrinhwindows.library_management.model.entity.BookTitle;
 import com.laptrinhwindows.library_management.model.enumtype.BookStatus;
@@ -12,12 +13,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BookPanelController {
-    private final ManagerContext context;
+    private final LibraryContext context;
     private final BookService bookService;
     private final BookTitleService bookTitleService;
     private final BookManagementPanel panel;
 
-    public BookPanelController(ManagerContext context) {
+    public BookPanelController(LibraryContext context) {
         this.context = context;
         this.bookService = context.getBookService();
         this.bookTitleService = context.getBookTitleService();

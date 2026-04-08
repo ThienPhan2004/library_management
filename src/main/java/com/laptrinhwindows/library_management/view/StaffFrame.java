@@ -14,32 +14,30 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ManagerFrame extends JFrame implements LibraryWorkspaceFrame {
+public class StaffFrame extends JFrame implements LibraryWorkspaceFrame {
     private final JLabel titleLabel;
     private final JLabel userInfoLabel;
     private final JLabel statusLabel;
     private final JButton logoutButton;
+    private final BorrowOrderPanel borrowOrderPanel;
+    private final ReturnBookPanel returnBookPanel;
     private final StudentManagementPanel studentManagementPanel;
-    private final BookTitleManagementPanel bookTitleManagementPanel;
-    private final BookManagementPanel bookManagementPanel;
-    private final SupplierManagementPanel supplierManagementPanel;
-    private final ReportPanel reportPanel;
+    private final BorrowTrackingPanel borrowTrackingPanel;
 
-    public ManagerFrame() {
-        setTitle("Quản lý thư viện - Quản lý");
-        setSize(1150, 720);
+    public StaffFrame() {
+        setTitle("Quản lý thư viện - Nhân viên");
+        setSize(1120, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        titleLabel = new JLabel("GIAO DIỆN QUẢN LÝ THƯ VIỆN", SwingConstants.CENTER);
+        titleLabel = new JLabel("GIAO DIỆN NHÂN VIÊN THƯ VIỆN", SwingConstants.CENTER);
         userInfoLabel = new JLabel("Chưa đăng nhập", SwingConstants.CENTER);
         statusLabel = new JLabel("Khởi tạo giao diện...", SwingConstants.CENTER);
         logoutButton = new JButton("Đăng xuất");
+        borrowOrderPanel = new BorrowOrderPanel();
+        returnBookPanel = new ReturnBookPanel();
         studentManagementPanel = new StudentManagementPanel();
-        bookTitleManagementPanel = new BookTitleManagementPanel();
-        bookManagementPanel = new BookManagementPanel();
-        supplierManagementPanel = new SupplierManagementPanel();
-        reportPanel = new ReportPanel();
+        borrowTrackingPanel = new BorrowTrackingPanel();
 
         studentManagementPanel.setReadOnlyMode(true);
         initLayout();
@@ -67,11 +65,10 @@ public class ManagerFrame extends JFrame implements LibraryWorkspaceFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setFont(tabFont);
+        tabbedPane.addTab("Mượn sách", borrowOrderPanel);
+        tabbedPane.addTab("Trả sách", returnBookPanel);
         tabbedPane.addTab("Danh sách sinh viên", studentManagementPanel);
-        tabbedPane.addTab("Quản lý đầu sách", bookTitleManagementPanel);
-        tabbedPane.addTab("Quản lý cuốn sách", bookManagementPanel);
-        tabbedPane.addTab("Nhà cung cấp", supplierManagementPanel);
-        tabbedPane.addTab("Báo cáo", reportPanel);
+        tabbedPane.addTab("Lịch sử mượn trả", borrowTrackingPanel);
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
@@ -87,37 +84,37 @@ public class ManagerFrame extends JFrame implements LibraryWorkspaceFrame {
 
     @Override
     public BookTitleManagementPanel getBookTitleManagementPanel() {
-        return bookTitleManagementPanel;
+        return null;
     }
 
     @Override
     public BookManagementPanel getBookManagementPanel() {
-        return bookManagementPanel;
+        return null;
     }
 
     @Override
     public BorrowOrderPanel getBorrowOrderPanel() {
-        return null;
+        return borrowOrderPanel;
     }
 
     @Override
     public ReturnBookPanel getReturnBookPanel() {
-        return null;
+        return returnBookPanel;
     }
 
     @Override
     public BorrowTrackingPanel getBorrowTrackingPanel() {
-        return null;
+        return borrowTrackingPanel;
     }
 
     @Override
     public SupplierManagementPanel getSupplierManagementPanel() {
-        return supplierManagementPanel;
+        return null;
     }
 
     @Override
     public ReportPanel getReportPanel() {
-        return reportPanel;
+        return null;
     }
 
     @Override

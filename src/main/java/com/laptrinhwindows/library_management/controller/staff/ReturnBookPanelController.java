@@ -1,18 +1,19 @@
-package com.laptrinhwindows.library_management.controller.manager;
+package com.laptrinhwindows.library_management.controller.staff;
 
+import com.laptrinhwindows.library_management.controller.common.LibraryContext;
 import com.laptrinhwindows.library_management.model.entity.BorrowOrder;
 import com.laptrinhwindows.library_management.service.BorrowOrderService;
-import com.laptrinhwindows.library_management.view.manager.ReturnBookPanel;
+import com.laptrinhwindows.library_management.view.staff.ReturnBookPanel;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public class ReturnBookPanelController {
-    private final ManagerContext context;
+    private final LibraryContext context;
     private final BorrowOrderService borrowOrderService;
     private final ReturnBookPanel panel;
 
-    public ReturnBookPanelController(ManagerContext context) {
+    public ReturnBookPanelController(LibraryContext context) {
         this.context = context;
         this.borrowOrderService = context.getBorrowOrderService();
         this.panel = context.getReturnBookPanel();

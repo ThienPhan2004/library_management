@@ -6,6 +6,7 @@ import com.laptrinhwindows.library_management.service.impl.AuthServiceImpl;
 import com.laptrinhwindows.library_management.view.AdminFrame;
 import com.laptrinhwindows.library_management.view.LoginFrame;
 import com.laptrinhwindows.library_management.view.ManagerFrame;
+import com.laptrinhwindows.library_management.view.StaffFrame;
 
 public class LoginController {
     private final LoginFrame loginFrame;
@@ -16,13 +17,13 @@ public class LoginController {
         this.authService = new AuthServiceImpl();
     }
 
-    // Gắn sự kiện đăng nhập cho form.
     public void init() {
+        // Gắn sự kiện cho nút đăng nhập trên form.
         loginFrame.addLoginListener(event -> handleLogin());
     }
 
-    // Xử lý nghiệp vụ đăng nhập và mở màn hình phù hợp với vai trò.
     private void handleLogin() {
+        // Lấy dữ liệu người dùng nhập từ giao diện.
         String username = loginFrame.getUsername();
         String password = loginFrame.getPassword();
 
@@ -41,8 +42,8 @@ public class LoginController {
         openRoleScreen(loginUser);
     }
 
-    // Phân tách giao diện theo từng đối tượng sử dụng hệ thống.
     private void openRoleScreen(LoginUserDTO loginUser) {
+        // Mỗi vai trò sẽ được mở một giao diện riêng.
         loginFrame.dispose();
 
         if (loginUser.getRoleId() != null && loginUser.getRoleId() == 1) {
@@ -58,6 +59,14 @@ public class LoginController {
             ManagerController managerController = new ManagerController(managerFrame, loginUser);
             managerController.init();
             managerFrame.setVisible(true);
+            return;
+        }
+
+        if (loginUser.getRoleId() != null && loginUser.getRoleId() == 3) {
+            StaffFrame staffFrame = new StaffFrame();
+            StaffController staffController = new StaffController(staffFrame, loginUser);
+            staffController.init();
+            staffFrame.setVisible(true);
             return;
         }
 

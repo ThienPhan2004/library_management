@@ -1,17 +1,18 @@
-package com.laptrinhwindows.library_management.controller.manager;
+package com.laptrinhwindows.library_management.controller.shared;
 
+import com.laptrinhwindows.library_management.controller.common.LibraryContext;
 import com.laptrinhwindows.library_management.model.entity.Student;
 import com.laptrinhwindows.library_management.service.StudentService;
-import com.laptrinhwindows.library_management.view.manager.StudentManagementPanel;
+import com.laptrinhwindows.library_management.view.shared.StudentManagementPanel;
 
 import java.util.List;
 
 public class StudentPanelController {
-    private final ManagerContext context;
+    private final LibraryContext context;
     private final StudentService studentService;
     private final StudentManagementPanel panel;
 
-    public StudentPanelController(ManagerContext context) {
+    public StudentPanelController(LibraryContext context) {
         this.context = context;
         this.studentService = context.getStudentService();
         this.panel = context.getStudentManagementPanel();

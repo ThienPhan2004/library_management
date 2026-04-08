@@ -1,4 +1,4 @@
-package com.laptrinhwindows.library_management.view.manager;
+package com.laptrinhwindows.library_management.view.staff;
 
 import com.laptrinhwindows.library_management.model.entity.Book;
 import com.laptrinhwindows.library_management.model.entity.Student;
@@ -8,6 +8,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,6 +33,7 @@ public class BorrowOrderPanel extends JPanel {
     private final JTable availableBooksTable;
     private final DefaultTableModel availableBooksTableModel;
     private final JButton createBorrowOrderButton;
+    private final JButton exportPdfButton;
 
     public BorrowOrderPanel() {
         searchStudentCodeField = new JTextField(10);
@@ -65,6 +67,8 @@ public class BorrowOrderPanel extends JPanel {
         borrowDateSpinner = createDateSpinner(LocalDate.now());
         dueDateSpinner = createDateSpinner(LocalDate.now().plusDays(7));
         createBorrowOrderButton = new JButton("Lưu phiếu mượn");
+        exportPdfButton = new JButton("Xuất phiếu PDF");
+        exportPdfButton.setEnabled(false);
 
         availableBooksTableModel = new DefaultTableModel(
                 new Object[]{"Chọn", "ID", "Đầu sách", "Tác giả", "Vị trí", "Trạng thái"}, 0
@@ -86,7 +90,6 @@ public class BorrowOrderPanel extends JPanel {
         updateSelectedBooksDisplay();
     }
 
-    // Tạo giao diện cho chức năng lập phiếu mượn theo bố cục rõ ràng hơn.
     private void initLayout() {
         setLayout(new BorderLayout(10, 10));
         setBackground(Color.WHITE);
@@ -118,7 +121,7 @@ public class BorrowOrderPanel extends JPanel {
         JPanel borrowInfoPanel = new JPanel(new GridBagLayout());
         borrowInfoPanel.setBackground(Color.WHITE);
         borrowInfoPanel.setBorder(BorderFactory.createTitledBorder("Thông tin phiếu mượn"));
-        borrowInfoPanel.setPreferredSize(new Dimension(360, 0));
+        borrowInfoPanel.setPreferredSize(new Dimension(420, 0));
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -155,7 +158,7 @@ public class BorrowOrderPanel extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
         JScrollPane selectedBooksScrollPane = new JScrollPane(selectedBooksArea);
-        selectedBooksScrollPane.setPreferredSize(new Dimension(210, 90));
+        selectedBooksScrollPane.setPreferredSize(new Dimension(250, 90));
         borrowInfoPanel.add(selectedBooksScrollPane, gbc);
 
         gbc.gridx = 0;
@@ -176,13 +179,18 @@ public class BorrowOrderPanel extends JPanel {
         gbc.weightx = 1;
         borrowInfoPanel.add(dueDateSpinner, gbc);
 
+        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        actionPanel.setBackground(Color.WHITE);
+        actionPanel.add(createBorrowOrderButton);
+        actionPanel.add(exportPdfButton);
+
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.weightx = 0;
         gbc.insets = new Insets(18, 10, 10, 10);
         gbc.anchor = GridBagConstraints.CENTER;
-        borrowInfoPanel.add(createBorrowOrderButton, gbc);
+        borrowInfoPanel.add(actionPanel, gbc);
 
         JScrollPane booksScrollPane = new JScrollPane(availableBooksTable);
         booksScrollPane.setBorder(BorderFactory.createTitledBorder("Chọn một hoặc nhiều cuốn sách"));
@@ -196,7 +204,6 @@ public class BorrowOrderPanel extends JPanel {
         add(bottomPanel, BorderLayout.CENTER);
     }
 
-    // Gắn các sự kiện nội bộ để tự cập nhật thông tin đang chọn trên form.
     private void registerDisplayEvents() {
         studentTable.getSelectionModel().addListSelectionListener(event -> {
             if (!event.getValueIsAdjusting()) {
@@ -205,24 +212,23 @@ public class BorrowOrderPanel extends JPanel {
         });
 
         availableBooksTableModel.addTableModelListener(event -> {
-            if (event.getType() == TableModelEvent.UPDATE || event.getType() == TableModelEvent.INSERT || event.getType() == TableModelEvent.DELETE) {
+            if (event.getType() == TableModelEvent.UPDATE
+                    || event.getType() == TableModelEvent.INSERT
+                    || event.getType() == TableModelEvent.DELETE) {
                 updateSelectedBooksDisplay();
             }
         });
     }
 
-    // Tạo ô chọn ngày để người dùng đỡ phải gõ tay.
     private JSpinner createDateSpinner(LocalDate localDate) {
         Date initialDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         SpinnerDateModel model = new SpinnerDateModel(initialDate, null, null, java.util.Calendar.DAY_OF_MONTH);
         JSpinner spinner = new JSpinner(model);
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "dd-MM-yyyy");
-        spinner.setEditor(editor);
+        spinner.setEditor(new JSpinner.DateEditor(spinner, "dd-MM-yyyy"));
         spinner.setPreferredSize(new Dimension(160, 32));
         return spinner;
     }
 
-    // Cập nhật tên học sinh đã chọn để người dùng dễ quan sát.
     private void updateSelectedStudentDisplay() {
         int selectedRow = studentTable.getSelectedRow();
         if (selectedRow < 0) {
@@ -236,7 +242,6 @@ public class BorrowOrderPanel extends JPanel {
         selectedStudentField.setText(fullName + " - " + studentCode + " - " + className);
     }
 
-    // Cập nhật danh sách sách đã tích chọn trên bảng.
     private void updateSelectedBooksDisplay() {
         List<String> selectedBooks = new ArrayList<>();
         for (int i = 0; i < availableBooksTableModel.getRowCount(); i++) {
@@ -255,7 +260,6 @@ public class BorrowOrderPanel extends JPanel {
         }
     }
 
-    // Hiển thị danh sách học sinh để người dùng tìm và chọn.
     public void showStudents(List<Student> students) {
         studentTableModel.setRowCount(0);
         for (Student student : students) {
@@ -270,7 +274,6 @@ public class BorrowOrderPanel extends JPanel {
         updateSelectedStudentDisplay();
     }
 
-    // Hiển thị danh sách các cuốn sách còn khả dụng để chọn mượn.
     public void showAvailableBooks(List<Book> books) {
         availableBooksTableModel.setRowCount(0);
         for (Book book : books) {
@@ -288,7 +291,6 @@ public class BorrowOrderPanel extends JPanel {
         updateSelectedBooksDisplay();
     }
 
-    // Lấy danh sách mã cuốn sách được chọn trên bảng.
     public List<Integer> getSelectedBookIds() {
         List<Integer> selectedIds = new ArrayList<>();
         for (int i = 0; i < availableBooksTableModel.getRowCount(); i++) {
@@ -329,7 +331,6 @@ public class BorrowOrderPanel extends JPanel {
         return convertToLocalDate((Date) dueDateSpinner.getValue());
     }
 
-    // Xóa các lựa chọn cũ sau khi lưu phiếu mượn thành công.
     public void clearBorrowOrderForm() {
         borrowDateSpinner.setValue(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         dueDateSpinner.setValue(Date.from(LocalDate.now().plusDays(7).atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -341,31 +342,60 @@ public class BorrowOrderPanel extends JPanel {
         updateSelectedBooksDisplay();
     }
 
-    // Xóa điều kiện tìm học sinh.
     public void clearStudentSearchFields() {
         searchStudentCodeField.setText("");
         searchStudentNameField.setText("");
         searchStudentClassField.setText("");
     }
 
-    // Gắn sự kiện tìm học sinh.
     public void addStudentSearchListener(ActionListener listener) {
         searchStudentButton.addActionListener(listener);
     }
 
-    // Gắn sự kiện làm mới danh sách học sinh.
     public void addStudentResetListener(ActionListener listener) {
         resetStudentButton.addActionListener(listener);
     }
 
-    // Gắn sự kiện lưu phiếu mượn.
     public void addCreateBorrowOrderListener(ActionListener listener) {
         createBorrowOrderButton.addActionListener(listener);
     }
 
-    // Hiển thị hộp thoại báo lỗi cho người dùng.
+    public void addExportPdfListener(ActionListener listener) {
+        exportPdfButton.addActionListener(listener);
+    }
+
+    public void setExportPdfEnabled(boolean enabled) {
+        exportPdfButton.setEnabled(enabled);
+    }
+
     public void showErrorMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public File choosePdfSaveLocation(String defaultFileName) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Chọn nơi lưu phiếu mượn PDF");
+        fileChooser.setSelectedFile(new File(defaultFileName));
+        int result = fileChooser.showSaveDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) {
+            return null;
+        }
+
+        File selectedFile = fileChooser.getSelectedFile();
+        if (!selectedFile.getName().toLowerCase().endsWith(".pdf")) {
+            selectedFile = new File(selectedFile.getParentFile(), selectedFile.getName() + ".pdf");
+        }
+        return selectedFile;
+    }
+
+    public boolean confirmOpenPdf(File file) {
+        int choice = JOptionPane.showConfirmDialog(
+                this,
+                "Xuất phiếu PDF thành công:\n" + file.getAbsolutePath() + "\n\nBạn có muốn mở file ngay không?",
+                "Xuất PDF thành công",
+                JOptionPane.YES_NO_OPTION
+        );
+        return choice == JOptionPane.YES_OPTION;
     }
 
     private LocalDate convertToLocalDate(Date date) {

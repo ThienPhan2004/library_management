@@ -1,44 +1,41 @@
 package com.laptrinhwindows.library_management.controller;
 
+import com.laptrinhwindows.library_management.controller.admin.AccountManagementController;
 import com.laptrinhwindows.library_management.dto.LoginUserDTO;
-import com.laptrinhwindows.library_management.service.BookService;
-import com.laptrinhwindows.library_management.service.BorrowOrderService;
-import com.laptrinhwindows.library_management.service.StudentService;
-import com.laptrinhwindows.library_management.service.impl.BookServiceImpl;
-import com.laptrinhwindows.library_management.service.impl.BorrowOrderServiceImpl;
-import com.laptrinhwindows.library_management.service.impl.StudentServiceImpl;
+import com.laptrinhwindows.library_management.service.UserService;
+import com.laptrinhwindows.library_management.service.impl.UserServiceImpl;
 import com.laptrinhwindows.library_management.view.AdminFrame;
+import com.laptrinhwindows.library_management.view.LoginFrame;
 
 public class AdminController {
     private final AdminFrame adminFrame;
     private final LoginUserDTO loginUser;
-    private final BookService bookService;
-    private final StudentService studentService;
-    private final BorrowOrderService borrowOrderService;
+    private final AccountManagementController accountManagementController;
 
     public AdminController(AdminFrame adminFrame, LoginUserDTO loginUser) {
         this.adminFrame = adminFrame;
         this.loginUser = loginUser;
-        this.bookService = new BookServiceImpl();
-        this.studentService = new StudentServiceImpl();
-        this.borrowOrderService = new BorrowOrderServiceImpl();
+
+        // Admin chỉ quản lý tài khoản người dùng trong hệ thống.
+        UserService userService = new UserServiceImpl();
+        this.accountManagementController = new AccountManagementController(adminFrame, loginUser, userService);
     }
 
-    // Khởi tạo giao diện dành cho quản trị viên.
     public void init() {
         adminFrame.setCurrentUserInfo(loginUser.getUsername(), loginUser.getRoleId(), loginUser.getRoleName());
-        adminFrame.setStatusMessage("Đăng nhập thành công với quyền quản trị viên.");
+        adminFrame.setStatusMessage("Đăng nhập thành công với quyền quản trị tài khoản.");
+        adminFrame.addLogoutListener(event -> handleLogout());
+
+        accountManagementController.init();
+        accountManagementController.loadData();
     }
 
-    public BookService getBookService() {
-        return bookService;
-    }
-
-    public StudentService getStudentService() {
-        return studentService;
-    }
-
-    public BorrowOrderService getBorrowOrderService() {
-        return borrowOrderService;
+    private void handleLogout() {
+        // Đăng xuất: đóng frame hiện tại và quay về màn hình đăng nhập.
+        adminFrame.dispose();
+        LoginFrame loginFrame = new LoginFrame();
+        LoginController loginController = new LoginController(loginFrame);
+        loginController.init();
+        loginFrame.setVisible(true);
     }
 }

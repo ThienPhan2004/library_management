@@ -1,4 +1,4 @@
-package com.laptrinhwindows.library_management.view.manager;
+package com.laptrinhwindows.library_management.view.shared;
 
 import com.laptrinhwindows.library_management.model.entity.Student;
 
@@ -26,6 +26,8 @@ public class StudentManagementPanel extends JPanel {
     private final JButton addStudentButton;
     private final JButton updateStudentButton;
     private final JButton deleteStudentButton;
+    private JPanel buttonPanel;
+    private boolean readOnlyMode;
 
     public StudentManagementPanel() {
         searchCodeField = new JTextField(12);
@@ -123,7 +125,7 @@ public class StudentManagementPanel extends JPanel {
         gbc.gridx = 1;
         formPanel.add(studentPhoneField, gbc);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(addStudentButton);
         buttonPanel.add(updateStudentButton);
@@ -137,6 +139,18 @@ public class StudentManagementPanel extends JPanel {
         add(searchPanel, BorderLayout.NORTH);
         add(tableScrollPane, BorderLayout.CENTER);
         add(formPanel, BorderLayout.SOUTH);
+    }
+
+    public void setReadOnlyMode(boolean readOnlyMode) {
+        this.readOnlyMode = readOnlyMode;
+        studentCodeField.setEditable(!readOnlyMode);
+        studentNameField.setEditable(!readOnlyMode);
+        studentClassField.setEditable(!readOnlyMode);
+        studentPhoneField.setEditable(!readOnlyMode);
+        addStudentButton.setVisible(!readOnlyMode);
+        updateStudentButton.setVisible(!readOnlyMode);
+        deleteStudentButton.setVisible(!readOnlyMode);
+        buttonPanel.setVisible(!readOnlyMode);
     }
 
     // Hiển thị danh sách học sinh lên bảng.
@@ -168,6 +182,10 @@ public class StudentManagementPanel extends JPanel {
         studentNameField.setText("");
         studentClassField.setText("");
         studentPhoneField.setText("");
+    }
+
+    public boolean isReadOnlyMode() {
+        return readOnlyMode;
     }
 
     // Xóa các điều kiện tìm kiếm học sinh.

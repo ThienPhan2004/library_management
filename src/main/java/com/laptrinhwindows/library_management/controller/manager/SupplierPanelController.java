@@ -1,5 +1,6 @@
 package com.laptrinhwindows.library_management.controller.manager;
 
+import com.laptrinhwindows.library_management.controller.common.LibraryContext;
 import com.laptrinhwindows.library_management.model.entity.Supplier;
 import com.laptrinhwindows.library_management.model.enumtype.RecordStatus;
 import com.laptrinhwindows.library_management.service.SupplierService;
@@ -8,11 +9,11 @@ import com.laptrinhwindows.library_management.view.manager.SupplierManagementPan
 import java.util.List;
 
 public class SupplierPanelController {
-    private final ManagerContext context;
+    private final LibraryContext context;
     private final SupplierService supplierService;
     private final SupplierManagementPanel panel;
 
-    public SupplierPanelController(ManagerContext context) {
+    public SupplierPanelController(LibraryContext context) {
         this.context = context;
         this.supplierService = context.getSupplierService();
         this.panel = context.getSupplierManagementPanel();

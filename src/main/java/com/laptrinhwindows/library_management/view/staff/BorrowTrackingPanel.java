@@ -1,4 +1,4 @@
-package com.laptrinhwindows.library_management.view.manager;
+package com.laptrinhwindows.library_management.view.staff;
 
 import com.laptrinhwindows.library_management.model.entity.BorrowOrder;
 import com.laptrinhwindows.library_management.model.enumtype.OrderStatus;

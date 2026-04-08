@@ -1,5 +1,6 @@
 package com.laptrinhwindows.library_management.controller.manager;
 
+import com.laptrinhwindows.library_management.controller.common.LibraryContext;
 import com.laptrinhwindows.library_management.dto.BookTitleBorrowStatDTO;
 import com.laptrinhwindows.library_management.model.entity.BorrowOrder;
 import com.laptrinhwindows.library_management.service.BorrowOrderService;
@@ -8,11 +9,11 @@ import com.laptrinhwindows.library_management.view.manager.ReportPanel;
 import java.util.List;
 
 public class ReportPanelController {
-    private final ManagerContext context;
+    private final LibraryContext context;
     private final BorrowOrderService borrowOrderService;
     private final ReportPanel panel;
 
-    public ReportPanelController(ManagerContext context) {
+    public ReportPanelController(LibraryContext context) {
         this.context = context;
         this.borrowOrderService = context.getBorrowOrderService();
         this.panel = context.getReportPanel();
